@@ -201,6 +201,24 @@
 						            case 'q3a': //desktop
 						                console.log(ev.srcElement.id);
 						                this.class = ".desktop";
+						                $('#fs-form-wrap2').hide();
+						                $('#fs-form-wrap').show();
+						                var formWrap = document.getElementById('fs-form-wrap');
+
+						                [].slice.call(document.querySelectorAll('select.cs-select')).forEach(function (el) {
+						                    new SelectFx(el, {
+						                        stickyPlaceholder: false,
+						                        onChange: function (val) {
+						                            document.querySelector('span.cs-placeholder').style.backgroundColor = val;
+						                        }
+						                    });
+						                });
+
+						                new FForm(formWrap, {
+						                    onReview: function () {
+						                        classie.add(document.body, 'overview'); // for demo purposes only
+						                    }
+						                });
 						                break;
 						            case 'q3b': //web
 						                console.log(ev.srcElement.id);
@@ -217,6 +235,9 @@
 						            case 'q3e': //mobile
 						                console.log(ev.srcElement.id);
 						                this.class = ".mobile";
+						                break;
+						            default:
+						                self._nextField(undefined);
 						                break;
 						        } 
 						        console.log(this.class)
