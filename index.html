@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="no-js">
 	<head>
 		<meta charset="UTF-8" />
@@ -9,6 +9,9 @@
 		<meta name="keywords" content="Cotizador, Web, Diseño Web, Precios, Página Web, Sitio Web, " />
 		<link href="https://plus.google.com/+ControlZetaWeb" rel="publisher" />
 		<link rel="shortcut icon" href="../favicon.ico">
+        <script src="https://code.jquery.com/jquery-3.1.1.js"
+                integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+                crossorigin="anonymous"></script>
 		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
 		<link rel="stylesheet" type="text/css" href="css/demo.css" />
 		<link rel="stylesheet" type="text/css" href="css/component.css" />
@@ -30,7 +33,7 @@
 				</div>
 				<form id="myform" class="fs-form fs-form-full" autocomplete="off">
 					<ol class="fs-fields">
-						<li>
+						<!--<li>
 							<label class="fs-field-label fs-anim-upper" for="q1">Cuál es tu nombre?</label>
 							<input class="fs-anim-lower" id="q1" name="q1" type="text" placeholder="Walter White" required/>
 						</li>
@@ -41,14 +44,14 @@
 						<li>
 							<label class="fs-field-label fs-anim-upper" for="q2" data-info="No te molestaremos si no es necesario...">Cuál es tu teléfono o celular?</label>
 							<input class="fs-anim-lower" id="q2" name="q2" type="email" placeholder="22-22-22-22-22" required/>
-						</li>
-						<li data-input-trigger>
+						</li>-->
+						<li data-input-trigger style="">
 							<label class="fs-field-label fs-anim-upper" for="q3" data-info="Ayúdanos a saber qué podemos hacer por tí.">En qué estas interesado?</label>
 							<div class="fs-radio-group fs-radio-custom clearfix fs-anim-lower">
 								<span><input id="q3b" name="q3" type="radio" value="web"/><label for="q3b" class="radio-conversion">Proyecto Web</label></span>
 								<span><input id="q3c" name="q3" type="radio" value="social"/><label for="q3c" class="radio-social">Social Media</label></span>
-								<span><input id="q3c" name="q3" type="radio" value="design"/><label for="q3c" class="radio-social">Diseño Corporativo</label></span>
-								<span><input id="q3a" name="q3" type="radio" value="mobile"/><label for="q3a" class="radio-mobile">App</label></span>
+								<span><input id="q3d" name="q3" type="radio" value="design"/><label for="q3c" class="radio-social">Diseño Corporativo</label></span>
+								<span><input id="q3e" name="q3" type="radio" value="mobile"/><label for="q3a" class="radio-mobile">App</label></span>
 								<span><input id="q3a" name="q3" type="radio" value="desktop"/><label for="q3a" class="radio-mobile">Software</label></span>
 							</div>
 						</li>
@@ -78,6 +81,22 @@
 								<option value="#f1c1bd" data-class="color-f1c1bd">#f1c1bd</option>
 							</select>
 						</li>
+                        <li data-input-trigger class="social">
+                            <label class="fs-field-label fs-anim-upper" for="q3" data-info="Ayúdanos a saber qué podemos hacer por tí.">En qué redes sociales estas interesado?</label>
+                            <div class="fs-radio-group fs-radio-custom clearfix fs-anim-lower">
+                                <span><input id="q3b" name="q3" type="radio" value="web" /><label for="q3b" class="radio-conversion">Pinteres</label></span>
+                                <span><input id="q3c" name="q3" type="radio" value="social" /><label for="q3c" class="radio-social">Facebook</label></span>
+                                <span><input id="q3d" name="q3" type="radio" value="design" /><label for="q3c" class="radio-social">Twitter</label></span>
+                            </div>
+                        </li>
+                        <li data-input-trigger class="web">
+                            <label class="fs-field-label fs-anim-upper" for="q3" data-info="Ayúdanos a saber qué podemos hacer por tí.">En qué tipo de proyecto web estas interesado?</label>
+                            <div class="fs-radio-group fs-radio-custom clearfix fs-anim-lower">
+                                <span><input id="q3b" name="q3" type="radio" value="web" /><label for="q3b" class="radio-conversion">Pinteres</label></span>
+                                <span><input id="q3c" name="q3" type="radio" value="social" /><label for="q3c" class="radio-social">Facebook</label></span>
+                                <span><input id="q3d" name="q3" type="radio" value="design" /><label for="q3c" class="radio-social">Twitter</label></span>
+                            </div>
+                        </li>
 						<li>
 							<label class="fs-field-label fs-anim-upper" for="q4">Describe como te imaginas tu nuevo sitio web</label>
 							<textarea class="fs-anim-lower" id="q4" name="q4" placeholder="Escribe una descripción larga"></textarea>

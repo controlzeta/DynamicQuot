@@ -66,9 +66,9 @@
 		// show progress bar
 		ctrlProgress : true,
 		// show navigation dots
-		ctrlNavDots : true,
+		// ctrlNavDots : true
 		// show [current field]/[total fields] status
-		ctrlNavPosition : true,
+		// ctrlNavPosition : true,
 		// reached the review and submit step
 		onReview : function() { return false; }
 	};
@@ -86,6 +86,9 @@
 
 		// current field position
 		this.current = 0;
+
+	    // current class for field position
+		this.class = '';
 
 		// all fields
 		this.fields = [].slice.call( this.fieldsList.children );
@@ -193,7 +196,32 @@
 
 					case 'input' : 
 						[].slice.call( fld.querySelectorAll( 'input[type="radio"]' ) ).forEach( function( inp ) {
-							inp.addEventListener( 'change', function(ev) { self._nextField(); } );
+						    inp.addEventListener('change', function (ev) {
+						        switch (ev.srcElement.id) {
+						            case 'q3a': //desktop
+						                console.log(ev.srcElement.id);
+						                this.class = ".desktop";
+						                break;
+						            case 'q3b': //web
+						                console.log(ev.srcElement.id);
+						                this.class = ".web";
+						                break;
+						            case 'q3c': //social
+						                console.log(ev.srcElement.id);
+						                this.class = ".social";
+						                break;
+						            case 'q3d': //design
+						                console.log(ev.srcElement.id);
+						                this.class = ".design";
+						                break;
+						            case 'q3e': //mobile
+						                console.log(ev.srcElement.id);
+						                this.class = ".mobile";
+						                break;
+						        } 
+						        console.log(this.class)
+						        self._nextFieldWithClass(undefined, this.class);
+						    });
 						} ); 
 						break;
 
@@ -207,7 +235,8 @@
 					*/
 				}
 			}
-		} );
+		});
+
 
 		// keyboard navigation events - jump to next field when pressing enter
 		document.addEventListener( 'keydown', function( ev ) {
@@ -273,7 +302,6 @@
 			classie.add( nextField, 'fs-current' );
 			classie.add( nextField, 'fs-show' );
 		}
-
 		// after animation ends remove added classes from fields
 		var self = this,
 			onEndAnimationFn = function( ev ) {
@@ -325,6 +353,124 @@
 		else {
 			onEndAnimationFn();
 		}
+	}
+
+    /**
+	 * nextField function
+	 * jumps to the next field
+	 */
+	FForm.prototype._nextFieldWithClass = function (backto, className) {
+	    this.fieldsList = this.formEl.querySelector('ol.fs-fields');
+	    var currentItem = document.querySelector('.fs-current');
+	    var elements = document.querySelectorAll(className);
+
+	    this.fieldsList = [].map.call(elements, function (e) {
+	        return e;
+	    });
+
+	    this.fields = [].map.call(elements, function (e) {
+	        return e;
+	    });
+	    this.fieldsCount = this.fields.length;
+
+	    if (this.isLastStep || !this._validade() || this.isAnimating) {
+	        return false;
+	    }
+	    this.isAnimating = true;
+
+	    // check if on last step
+	    this.isLastStep = this.current === this.fieldsCount - 1 && backto === undefined ? true : false;
+
+	    // clear any previous error messages
+	    this._clearError();
+
+	    // current field
+	    var currentFld = this.fields[this.current];
+
+	    // save the navigation direction
+	    this.navdir = backto !== undefined ? backto < this.current ? 'prev' : 'next' : 'next';
+
+	    // update current field
+	    this.current = backto !== undefined ? backto : this.current + 1;
+
+	    if (backto === undefined) {
+	        // update progress bar (unless we navigate backwards)
+	        this._progress();
+
+	        // save farthest position so far
+	        this.farthest = this.current;
+	    }
+
+	    // add class "fs-display-next" or "fs-display-prev" to the list of fields
+	    classie.add(this.fieldsList, 'fs-display-' + this.navdir);
+
+	    // remove class "fs-current" from current field and add it to the next one
+	    // also add class "fs-show" to the next field and the class "fs-hide" to the current one
+	    classie.remove(currentFld, 'fs-current');
+	    classie.add(currentItem, 'fs-hide');
+
+	    if (!this.isLastStep) {
+	        // update nav
+	        this._updateNav();
+
+	        // change the current field number/status
+	        this._updateFieldNumber();
+
+	        var nextField = this.fields[this.current];
+	        classie.add(nextField, 'fs-current');
+	        classie.add(nextField, 'fs-show');
+	    }
+	    // after animation ends remove added classes from fields
+	    var self = this,
+			onEndAnimationFn = function (ev) {
+			    if (support.animations) {
+			        this.removeEventListener(animEndEventName, onEndAnimationFn);
+			    }
+
+			    classie.remove(self.fieldsList, 'fs-display-' + self.navdir);
+			    classie.remove(currentFld, 'fs-hide');
+
+			    if (self.isLastStep) {
+			        // show the complete form and hide the controls
+			        self._hideCtrl(self.ctrlNav);
+			        self._hideCtrl(self.ctrlProgress);
+			        self._hideCtrl(self.ctrlContinue);
+			        self._hideCtrl(self.ctrlFldStatus);
+			        // replace class fs-form-full with fs-form-overview
+			        classie.remove(self.formEl, 'fs-form-full');
+			        classie.add(self.formEl, 'fs-form-overview');
+			        classie.add(self.formEl, 'fs-show');
+			        // callback
+			        self.options.onReview();
+			    }
+			    else {
+			        classie.remove(nextField, 'fs-show');
+
+			        if (self.options.ctrlNavPosition) {
+			            self.ctrlFldStatusCurr.innerHTML = self.ctrlFldStatusNew.innerHTML;
+			            self.ctrlFldStatus.removeChild(self.ctrlFldStatusNew);
+			            classie.remove(self.ctrlFldStatus, 'fs-show-' + self.navdir);
+			        }
+			    }
+			    self.isAnimating = false;
+			};
+
+	    if (support.animations) {
+	        if (this.navdir === 'next') {
+	            if (this.isLastStep) {
+	                currentFld.querySelector('.fs-anim-upper').addEventListener(animEndEventName, onEndAnimationFn);
+	            }
+	            else {
+	                nextField.querySelector('.fs-anim-lower').addEventListener(animEndEventName, onEndAnimationFn);
+	            }
+	        }
+	        else {
+	            nextField.querySelector('.fs-anim-upper').addEventListener(animEndEventName, onEndAnimationFn);
+	        }
+	    }
+	    else {
+	        onEndAnimationFn();
+	    }
 	}
 
 	/**
